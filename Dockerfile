@@ -7,7 +7,8 @@ RUN apt-get update \
     && python -m virtualenv /usr/src/linkchecker \
     && /usr/src/linkchecker/bin/pip install git+https://github.com/linkcheck/linkchecker.git@master
 
-RUN mkdir -p /usr/src/garie-linksintegrity
+RUN mkdir -p /usr/src/garie-linksintegrity \
+    && mkdir -p /usr/src/garie-linksintegrity/reports
 
 WORKDIR /usr/src/garie-linksintegrity
 
