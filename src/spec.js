@@ -2,7 +2,7 @@ const cron = require('cron');
 const { main } = require('./');
 const influx = require('./influx');
 const config = require('../config');
-const browserTime = require('./linksintegrity');
+const linksIntegrity = require('./linksintegrity');
 
 jest.mock('./influx', () => {
     return {
@@ -34,7 +34,7 @@ describe('main', () => {
     beforeEach(() => {
         influx.init.mockClear();
         cron.CronJob.mockClear();
-        linksintegrity.getData.mockClear();
+        linksIntegrity.getData.mockClear();
     });
 
     it('calls to bootstrap the influx setup', async () => {
@@ -67,7 +67,7 @@ describe('main', () => {
 
         //Tidy this up?
         setTimeout(() => {
-            expect(linksintegrity.getData).toHaveBeenCalledWith('https://www.test.com');
+            expect(linksIntegrity.getData).toHaveBeenCalledWith('https://www.test.com');
             expect(influx.saveData).toHaveBeenCalled();
             done();
         }, 500);

@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 const { urls, cron } = config;
 
 app.use('/collect', collect);
+app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
 
 const getDataForAllUrls = async () => {
     for (const item of urls) {

@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const child_process = require('child_process');
-const { getBrowserTimeFile, filterBrowserTimeData, getData } = require('./');
+const { getLinksIntegrityFile, filterLinksIntegrityData, getData } = require('./');
 const browserTimeTestData = require('../../test/mock-data/browsertime.json');
 const browserTimeTestDataFlat = require('../../test/mock-data/browsertime-flat.json');
 
