@@ -22,8 +22,9 @@ app.use('/reports', express.static('reports'), serveIndex('reports', { icons: tr
 const getDataForAllUrls = async () => {
     for (const item of urls) {
         const { url } = item;
+        const { recursion_depth } = item;
         try {
-            const data = await getData(url);
+            const data = await getData(url, recursion_depth);
             await saveData(url, data);
         } catch (err) {
             logger.error(`Failed to parse ${url}`, err);

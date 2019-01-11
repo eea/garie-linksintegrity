@@ -69,10 +69,12 @@ const getLinksIntegrityFile = (url = '') => {
     }
 };
 
-const getData = async url => {
+const getData = async (url, recursion_depth = 1) => {
     return new Promise(async (resolve, reject) => {
+
         try {
-            const child = child_process.spawn('bash', [path.join(__dirname, './linkchecker.sh'), url, reportDir(url)]);
+            const recursion_str = '-r ' + recursion_depth;
+            const child = child_process.spawn('bash', [path.join(__dirname, './linkchecker.sh'), url, reportDir(url), recursion_str]);
 
             child.on('exit', async () => {
                 logger.info(`Finished getting data for ${url}, trying to get the results`);

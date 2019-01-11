@@ -14,7 +14,7 @@ jest.mock('./influx', () => {
 jest.mock('../config', () => {
     return {
         cron: '*/2 * * * *',
-        urls: [{ url: 'https://www.test.com' }]
+        urls: [{ url: 'https://www.test.com', recursion_depth: 1}]
     };
 });
 
@@ -67,7 +67,7 @@ describe('main', () => {
 
         //Tidy this up?
         setTimeout(() => {
-            expect(linksIntegrity.getData).toHaveBeenCalledWith('https://www.test.com');
+            expect(linksIntegrity.getData).toHaveBeenCalledWith('https://www.test.com', 1);
             expect(influx.saveData).toHaveBeenCalled();
             done();
         }, 500);
