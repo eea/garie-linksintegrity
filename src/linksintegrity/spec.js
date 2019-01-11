@@ -54,7 +54,7 @@ describe('linskintegrity', () => {
         it('calls the shell script to get the data from linkchecker docker image and resolves with the test.dump file', async () => {
 
             const data = await getData('www.test.com');
-            expect(child_process.spawn).toBeCalledWith('bash', [path.join(__dirname, './linkchecker.sh'), 'www.test.com', "/usr/src/garie-linksintegrity/reports/linksintegrity-results/www.test.com"]);
+            expect(child_process.spawn).toBeCalledWith('bash', [path.join(__dirname, './linkchecker.sh'), 'www.test.com', "/usr/src/garie-linksintegrity/reports/linksintegrity-results/www.test.com", "-r 1"]);
 
             expect(data).toEqual(getResults(linksIntegrityTestData));
 
