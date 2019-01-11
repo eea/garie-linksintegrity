@@ -91,5 +91,6 @@ const getData = async url => {
 
 module.exports = {
     getLinksIntegrityFile,
-    getData
+    getData,
+    getResults
 };

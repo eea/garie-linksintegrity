@@ -1,6 +1,7 @@
 const CronJob = require('cron').CronJob;
 const express = require('express');
 const bodyParser = require('body-parser');
+const serveIndex = require('serve-index');
 
 const collect = require('./routes/collect');
 const logger = require('./utils/logger');

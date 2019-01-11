@@ -1,9 +1,9 @@
 const fs = require('fs-extra');
 const path = require('path');
 const child_process = require('child_process');
-const { getLinksIntegrityFile, filterLinksIntegrityData, getData } = require('./');
-const browserTimeTestData = require('../../test/mock-data/browsertime.json');
-const browserTimeTestDataFlat = require('../../test/mock-data/browsertime-flat.json');
+const { getLinksIntegrityFile, getData, getResults } = require('./');
+
+const linksIntegrityTestData = fs.readFileSync('./test/mock-data/test.dump');
 
 jest.mock('child_process', () => {
     return {
@@ -17,70 +17,46 @@ jest.mock('child_process', () => {
     }
 });
 
-describe('browser-time', () => {
+describe('linskintegrity', () => {
 
     beforeEach(() => {
         const today = new Date();
 
-        const filePath = path.join(__dirname, '../../reports/browsertime-results/www.test.co.uk', today.toISOString());
+        const filePath = path.join(__dirname, '../../reports/linksintegrity-results/www.test.com', today.toISOString());
         fs.ensureDirSync(filePath);
 
-        fs.writeJsonSync(path.join(filePath, 'browsertime.json'), browserTimeTestData);
+        fs.writeFileSync(path.join(filePath, 'linksintegrity.dump'), linksIntegrityTestData);
     })
 
     afterEach(() => {
-        fs.removeSync(path.join(__dirname, '../../../reports/browsertime-results/www.test.co.uk'));
+        fs.removeSync(path.join(__dirname, '../../../reports/linksintegrity-results/www.test.com'));
     });
 
-    describe('getBrowserTimeFile', () => {
+    describe('getLinksIntegrityFile', () => {
 
-        it('finds and resolves the browsertime results for the given url', async () => {
+        it('finds and resolves the linkchecker results for the given url', async () => {
 
-            const result = await getBrowserTimeFile('www.test.co.uk');
+            const result = await getLinksIntegrityFile('www.test.com');
 
-            expect(result).toEqual(browserTimeTestData);
+            expect(result).toEqual(getResults(linksIntegrityTestData));
 
         });
 
         it('rejects when no file can be found', async () => {
-            fs.removeSync(path.join(__dirname, '../../reports/browsertime-results/www.test.co.uk'));
-            await expect(getBrowserTimeFile('www.test.co.uk')).rejects.toEqual('Failed to get browsertime file for www.test.co.uk');
-        });
-
-    });
-
-    describe('filterBrowserTimeData', () => {
-
-        it('returns the `statistics` from the browser time file and flattens the data', () => {
-
-            const testData = {
-                statistics: {
-                    property1: {
-                        property1A: 'property1AValue'
-                    },
-                    property2: 'property2Value'
-                }
-            }
-
-            const data = filterBrowserTimeData(testData);
-
-            expect(data['property1.property1A']).toEqual('property1AValue');
-            expect(data.property2).toEqual('property2Value');
-
-
-
+            fs.removeSync(path.join(__dirname, '../../reports/linksintegrity-results/linksintegrity.dump'));
+            await expect(getLinksIntegrityFile('www.test.co.uk')).rejects.toEqual('Failed to get linksintegrity file for www.test.co.uk');
         });
 
     });
 
     describe('getData', () => {
 
-        it('calls the shell script to get the data from browsertime docker image and resolves with the browsertime file flattened when succesfully finished', async () => {
+        it('calls the shell script to get the data from linkchecker docker image and resolves with the test.dump file', async () => {
 
-            const data = await getData('www.test.co.uk');
-            expect(child_process.spawn).toBeCalledWith('bash', [path.join(__dirname, './browsertime.sh'), 'www.test.co.uk']);
+            const data = await getData('www.test.com');
+            expect(child_process.spawn).toBeCalledWith('bash', [path.join(__dirname, './linkchecker.sh'), 'www.test.com', "/usr/src/garie-linksintegrity/reports/linksintegrity-results/www.test.com"]);
 
-            expect(data).toEqual(browserTimeTestDataFlat);
+            expect(data).toEqual(getResults(linksIntegrityTestData));
 
 
         });
@@ -96,6 +72,13 @@ describe('browser-time', () => {
         });
 
 
+    });
+
+    describe('getResults', () => {
+        it('test regex applied on the results', async () => {
+            var str = "That's it. 1 link in 2 URLs checked. 0 warnings found. 0 errors found.";
+            var results = getResults(str);
+        });
     });
 
 });
