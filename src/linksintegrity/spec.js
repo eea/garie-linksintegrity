@@ -3,7 +3,7 @@ const path = require('path');
 const child_process = require('child_process');
 const { getLinksIntegrityFile, getData, getResults } = require('./');
 
-const linksIntegrityTestData = fs.readFileSync('./test/mock-data/test.dump');
+const linksIntegrityTestData = fs.readFileSync('./test/mock-data/test.txt');
 
 jest.mock('child_process', () => {
     return {
@@ -25,7 +25,7 @@ describe('linskintegrity', () => {
         const filePath = path.join(__dirname, '../../reports/linksintegrity-results/www.test.com', today.toISOString());
         fs.ensureDirSync(filePath);
 
-        fs.writeFileSync(path.join(filePath, 'linksintegrity.dump'), linksIntegrityTestData);
+        fs.writeFileSync(path.join(filePath, 'linksintegrity.txt'), linksIntegrityTestData);
     })
 
     afterEach(() => {
@@ -43,7 +43,7 @@ describe('linskintegrity', () => {
         });
 
         it('rejects when no file can be found', async () => {
-            fs.removeSync(path.join(__dirname, '../../reports/linksintegrity-results/linksintegrity.dump'));
+            fs.removeSync(path.join(__dirname, '../../reports/linksintegrity-results/linksintegrity.txt'));
             await expect(getLinksIntegrityFile('www.test.co.uk')).rejects.toEqual('Failed to get linksintegrity file for www.test.co.uk');
         });
 
@@ -51,7 +51,7 @@ describe('linskintegrity', () => {
 
     describe('getData', () => {
 
-        it('calls the shell script to get the data from linkchecker docker image and resolves with the test.dump file', async () => {
+        it('calls the shell script to get the data from linkchecker docker image and resolves with the test.txt file', async () => {
 
             const data = await getData('www.test.com');
             expect(child_process.spawn).toBeCalledWith('bash', [path.join(__dirname, './linkchecker.sh'), 'www.test.com', "/usr/src/garie-linksintegrity/reports/linksintegrity-results/www.test.com", "-r 1"]);

@@ -58,7 +58,7 @@ const getLinksIntegrityFile = (url = '') => {
 
         const newestFolder = sortFoldersByTime[sortFoldersByTime.length - 1];
 
-        const linksIntegrityFile = fs.readFileSync(path.join(dir, newestFolder, 'linksintegrity.dump'));
+        const linksIntegrityFile = fs.readFileSync(path.join(dir, newestFolder, 'linksintegrity.txt'));
 
         return Promise.resolve(getResults(linksIntegrityFile));
     } catch (err) {
