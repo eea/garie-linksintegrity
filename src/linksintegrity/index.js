@@ -40,7 +40,7 @@ function getResults(file) {
     var errors = parseInt(values[4]);
     var result = {};
 
-    result['linksintegrity'] = Math.round(100 - (100 * errors / links));
+    result['linksintegrity'] = 100 - (100 * errors / links);
     return result;
 }
 
