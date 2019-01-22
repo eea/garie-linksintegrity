@@ -46,9 +46,7 @@ function getResults(file) {
 
 const getLinksIntegrityFile = (url = '') => {
     try {
-        const urlWithNoProtocol = url.replace(/^https?\:\/\//i, '');
-
-        const dir = path.join(__dirname, '../../reports/linksintegrity-results', urlWithNoProtocol);
+        const dir = path.join(__dirname, '../../reports/linksintegrity-results', pathNameFromUrl(url));
 
         const folders = fs.readdirSync(dir);
 
