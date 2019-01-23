@@ -26,6 +26,8 @@ const init = async () => {
  */
 const saveData = async (url, data) => {
     try {
+        logger.info('DATA:');
+        logger.info(data);
         const points = Object.keys(data).reduce((points, key) => {
             if (data[key]) {
                 points.push({
@@ -36,8 +38,11 @@ const saveData = async (url, data) => {
             }
             return points;
         }, []);
-
+        logger.info('POINTS:');
+        logger.info(points);
         const result = await influx.writePoints(points);
+        logger.info('RESULT:');
+        logger.info(result);
         logger.info(`Successfully saved linksintegrity data for ${url}`);
         return result;
     } catch (err) {
