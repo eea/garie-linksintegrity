@@ -1,67 +1,32 @@
-const CronJob = require('cron').CronJob;
-const express = require('express');
-const bodyParser = require('body-parser');
-const serveIndex = require('serve-index');
+const garie_plugin = require('garie-plugin')
 
-const collect = require('./routes/collect');
-const logger = require('./utils/logger');
-const config = require('../config');
-
-const { init, saveData } = require('./influx');
-
-const { getData } = require('./linksintegrity');
-
-const app = express();
-app.use(bodyParser.json());
-
-const { urls, cron } = config;
-
-app.use('/collect', collect);
-app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
-
-const getDataForAllUrls = async () => {
-    for (const item of urls) {
-        const { url } = item;
-        const { recursion_depth } = item;
-        try {
-            const data = await getData(url, recursion_depth);
-            await saveData(url, data);
-        } catch (err) {
-            logger.error(`Failed to parse ${url}`, err);
-        }
-    }
-};
-
-const main = async () => {
-    await init();
-
-    try {
-        if (cron) {
-            return new CronJob(
-                cron,
-                async () => {
-                    getDataForAllUrls();
-                },
-                null,
-                true,
-                'Europe/London',
-                null,
-                true
-            );
-        }
-    } catch (err) {
-        console.log(err);
-    }
-};
-
-if (process.env.ENV !== 'test') {
-    app.listen(3000, async () => {
-        console.log('Application listening on port 3000');
-        await main();
-    });
+function getData_complex(url, options){
+//    console.log(url, options)
+//return {'v1':1, 'v2':22};
+        return {js_events:2, server_events:3, nb_visits:10}
 }
 
-module.exports = {
-    main,
-    app
-};
+function getData_simple(url, options){
+    return {'v1':1, 'v2':22};
+}
+
+function getMeasurement_complex(url, data){
+    measurement = []
+    measurement.push({
+        measurement: 'JsEvents/TotalVisits',
+        tags:  url ,
+        fields: { value: data.js_events / data.nb_visits * 100, total_visits: data.nb_visits, sentry_events: data.js_events }
+    });
+    measurement.push({
+        measurement: 'ServerEvents/TotalVisits',
+        tags:  url ,
+        fields: { value: data.server_events / data.nb_visits * 100, total_visits: data.nb_visits, sentry_events: data.server_events }
+    });
+
+    return measurement;
+
+}
+
+garie_plugin.init({getData:getData_simple,config:{"cron": "0 */4 * * *",urls:[{url:"www.test.com"}]}});
+
+garie_plugin.init({getData:getData_complex, getMeasurement:getMeasurement_complex, config:{"cron": "0 */4 * * *",urls:[{url:"www.test1.com"}]}});

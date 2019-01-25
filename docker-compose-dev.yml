@@ -7,18 +7,20 @@ services:
         environment:
             - INFLUXDB_ADMIN_USER=admin
             - INFLUXDB_ADMIN_PASSWORD=admin
-    garie-linksintegrity:
-        image: 'garie-linksintegrity:latest'
+
+    garie-plugin:
+        build: .
         privileged: true
         volumes:
+#            - ../garie-plugin:/garie-plugin
+            - .:/app
             - /var/run/docker.sock:/run/docker.sock
             - /usr/bin/docker:/bin/docker
-        ports:
-            - 3000:3000
         environment:
             - HOST=influxdb
         depends_on:
             - influxdb
+        command: bash -c "tail -f /dev/null"
 
     chronograf:
         image: 'chronograf:latest'
