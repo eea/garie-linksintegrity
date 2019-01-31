@@ -1,7 +1,5 @@
 const garie_plugin = require('garie-plugin')
-const child_process = require('child_process');
 const path = require('path');
-
 
 function getResults(file) {
 
@@ -17,6 +15,12 @@ function getResults(file) {
     return result;
 }
 
+const getFile = async (options) => {
+    options.fileName = 'linksintegrity.txt';
+    const file = await garie_plugin.utils.helpers.getNewestFile(options);
+    return getResults(file);
+}
+
 const getData = async (options) => {
     const { url } = options.url_settings;
     return new Promise(async (resolve, reject) => {
@@ -28,12 +32,15 @@ const getData = async (options) => {
                 recursion_depth = 1
             }
             const recursion_str = '-r ' + recursion_depth;
-            const child = child_process.spawn('bash', [path.join(__dirname, './linkchecker.sh'), url, reportDir, recursion_str]);
 
-            const 
-
-            child.stdout.pipe(process.stdout);
-            child.stderr.pipe(process.stderr);
+            options = { script: path.join(__dirname, './linkchecker.sh'),
+                        url: url,
+                        reportDir: reportDir,
+                        params: [ recursion_str],
+                        callback: getFile
+                    }
+            data = await garie_plugin.utils.helpers.executeScript(options);
+            resolve(data);
         } catch (err) {
             console.log(`Failed to get data for ${url}`, err);
             reject(`Failed to get data for ${url}`);
@@ -42,4 +49,4 @@ const getData = async (options) => {
 };
 
 
-garie_plugin.init({getData:getData, getResults: getResults, app_name:'linksintegrity', app_root: path.join(__dirname, '..'), config:{"cron": "0 */4 * * *",urls:[{url:"https://www.eea.europa.eu", recursion_depth:"0"}]}});
+garie_plugin.init({getData:getData, app_name:'linksintegrity', app_root: path.join(__dirname, '..'), config:{"cron": "0 */4 * * *",urls:[{url:"https://www.eea.europa.eu", recursion_depth:"0"}]}});
