@@ -1,5 +1,10 @@
 const garie_plugin = require('garie-plugin')
 const path = require('path');
+const config = require('../config');
+const express = require('express');
+const bodyParser = require('body-parser');
+const serveIndex = require('serve-index');
+
 
 function getResults(file) {
 
@@ -15,31 +20,32 @@ function getResults(file) {
     return result;
 }
 
-const getFile = async (options) => {
+const myGetFile = async (options) => {
     options.fileName = 'linksintegrity.txt';
     const file = await garie_plugin.utils.helpers.getNewestFile(options);
     return getResults(file);
 }
 
-const getData = async (options) => {
-    const { url } = options.url_settings;
+const myGetData = async (item) => {
+    const { url } = item.url_settings;
     return new Promise(async (resolve, reject) => {
-
         try {
-            var { recursion_depth } = options.url_settings;
-            const { reportDir } = options;
+            var { recursion_depth } = item.url_settings;
             if (recursion_depth === undefined){
                 recursion_depth = 1
             }
             const recursion_str = '-r ' + recursion_depth;
 
-            options = { script: path.join(__dirname, './linkchecker.sh'),
+            const { reportDir } = item;
+
+            const options = { script: path.join(__dirname, './my_script.sh'),
                         url: url,
                         reportDir: reportDir,
-                        params: [ recursion_str],
-                        callback: getFile
+                        params: [ recursion_str ],
+                        callback: myGetFile
                     }
             data = await garie_plugin.utils.helpers.executeScript(options);
+
             resolve(data);
         } catch (err) {
             console.log(`Failed to get data for ${url}`, err);
@@ -49,4 +55,26 @@ const getData = async (options) => {
 };
 
 
-garie_plugin.init({getData:getData, app_name:'linksintegrity', app_root: path.join(__dirname, '..'), config:{"cron": "0 */4 * * *",urls:[{url:"https://www.eea.europa.eu", recursion_depth:"0"}]}});
+
+console.log("Start");
+
+
+const app = express();
+app.use('/reports', express.static('reports'), serveIndex('reports', { icons: true }));
+
+const main = async () => {
+  garie_plugin.init({
+    database:'linksintegrity',
+    getData:myGetData,
+    app_name:'garie_linksintegrity',
+    app_root: path.join(__dirname, '..'),
+    config:config
+  });
+}
+
+if (process.env.ENV !== 'test') {
+  app.listen(3000, async () => {
+    console.log('Application listening on port 3000');
+    await main();
+  });
+}
