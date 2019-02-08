@@ -66,7 +66,7 @@ const main = async () => {
   garie_plugin.init({
     database:'linksintegrity',
     getData:myGetData,
-    app_name:'garie_linksintegrity',
+    app_name:'linksintegrity-results',
     app_root: path.join(__dirname, '..'),
     config:config
   });
