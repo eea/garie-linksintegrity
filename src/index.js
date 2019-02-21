@@ -7,7 +7,6 @@ const serveIndex = require('serve-index');
 
 
 function getResults(file) {
-
     var regex = RegExp("That's it. ([0-9]+) link[s]? in ([0-9]+) URL[s]? checked. ([0-9]+) warning[s]? found. ([0-9]+) error[s]? found.", 'g');
 
     var values = regex.exec(file);
@@ -45,7 +44,6 @@ const myGetData = async (item) => {
                         callback: myGetFile
                     }
             data = await garie_plugin.utils.helpers.executeScript(options);
-
             resolve(data);
         } catch (err) {
             console.log(`Failed to get data for ${url}`, err);
@@ -64,9 +62,10 @@ app.use('/reports', express.static('reports'), serveIndex('reports', { icons: tr
 
 const main = async () => {
   garie_plugin.init({
-    database:'linksintegrity',
+    db_name:'linksintegrity',
     getData:myGetData,
-    app_name:'linksintegrity-results',
+    report_folder_name:'linksintegrity-results',
+    plugin_name:"linksintegrity",
     app_root: path.join(__dirname, '..'),
     config:config
   });

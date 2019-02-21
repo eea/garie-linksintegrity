@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e
+
 echo "Start getting data"
 
 echo "Getting data for: $1"
@@ -9,7 +11,7 @@ report_location=$2/$(date +"%FT%H%M%S+0000")
 
 mkdir -p $report_location
 
-docker run --rm linkchecker/linkchecker $1 $3 --no-robots > $report_location/linksintegrity.txt 2>&1
+timeout 1800 docker run --rm linkchecker/linkchecker $1 $3 --no-robots > $report_location/linksintegrity.txt 2>&1
 
 echo "Finished getting data for: $1"
 
