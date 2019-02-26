@@ -88,9 +88,9 @@ On start garie-linkchecker will start to gather statistics for the websites adde
 
 **urls object**
 
-| Property         | Type                 | Description                                               |
-| ---------------- | -------------------- | --------------------------------------------------------- |
-| `url`            | `string` (required)  | Url to get linksintegrity statistics for.                 |
-| `plugins`        | `object` (optional)  | To setup custom configurations.                           |
-| `linksintegrity` | `object` (required)  | To setup custom lighthouse config.                        |
-| `recursion_depth`| `number` (optional)  | If not set, the default 1 will be used.                   |
+| Property                                | Type                 | Description                                               |
+| --------------------------------------- | -------------------- | --------------------------------------------------------- |
+| `url`                                   | `string` (required)  | Url to get linksintegrity statistics for.                 |
+| `plugins`                               | `object` (optional)  | To setup custom configurations.                           |
+| `plugins.linksintegrity`                | `object` (required)  | To setup custom lighthouse config.                        |
+| `plugins.linksintegrity.recursion_depth`| `number` (optional)  | If not set, the default 1 will be used.                   |
