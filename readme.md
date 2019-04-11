@@ -83,7 +83,11 @@ On start garie-linkchecker will start to gather statistics for the websites adde
 
 | Property | Type                | Description                                                                          |
 | -------- | ------------------- | ------------------------------------------------------------------------------------ |
-| `cron`   | `string` (optional) | Cron timer. Supports syntax can be found [here].(https://www.npmjs.com/package/cron) |
+| `plugins.linksintegrity.cron`   | `string` (optional) | Cron timer. Supports syntax can be found [here].(https://www.npmjs.com/package/cron) |
+| `plugins.linksintegrity.retry`   | `object` (optional) | Configuration how to retry the failed tasks |
+| `plugins.linksintegrity.retry.after`   | `number` (optional, default 30) | Minutes before we retry to execute the tasks |
+| `plugins.linksintegrity.retry.times`   | `number` (optional, default 3) | How many time to retry to execute the failed tasks |
+| `plugins.linksintegrity.retry.timeRange`   | `number` (optional, default 360) | Period in minutes to be checked in influx, to know if a task failed |
 | `urls`   | `object` (required) | Config for linksintegrity. More detail below                                         |
 
 **urls object**
