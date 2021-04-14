@@ -90,6 +90,12 @@ On start garie-linkchecker will start to gather statistics for the websites adde
 | `plugins.linksintegrity.retry.timeRange`   | `number` (optional, default 360) | Period in minutes to be checked in influx, to know if a task failed |
 | `urls`   | `object` (required) | Config for linksintegrity. More detail below                                         |
 
+
+MAX_AGE_OF_REPORT_FILES - int (default to 365), Maximum age (in days) of report files that can be deleted.
+MAX_AGE_OF_REPORT_VIDEOS - int (default to 100), Maximum age (in days) of report videos that can be deleted.
+CRON_DELETE_OLD_REPORTS - cronjob (default to '0 5 * * *') The frequency of checking old report files / videos.
+
+
 **urls object**
 
 | Property                                | Type                 | Description                                               |
@@ -98,3 +104,6 @@ On start garie-linkchecker will start to gather statistics for the websites adde
 | `plugins`                               | `object` (optional)  | To setup custom configurations.                           |
 | `plugins.linksintegrity`                | `object` (required)  | To setup custom lighthouse config.                        |
 | `plugins.linksintegrity.recursion_depth`| `number` (optional)  | If not set, the default 1 will be used.                   |
+
+For more information please go to the [garie-plugin](https://github.com/eea/garie-plugin) repo.
+
