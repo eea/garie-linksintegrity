@@ -1,6 +1,6 @@
 {
     "name": "garie_linksintegrity_plugin",
-    "version": "1.3.4",
+    "version": "1.3.5",
     "description": "Garie Linksintegrity Plugin",
     "engines": {
         "node": ">=6"
@@ -11,7 +11,7 @@
         "start": "node ./src/index.js"
     },
     "dependencies": {
-        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.41"
+        "garie-plugin": "https://github.com/eea/garie-plugin#0.0.42"
     },
     "devDependencies": {
         "codecov": "^3.0.0",
