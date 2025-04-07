@@ -1,4 +1,12 @@
-FROM node:8.15.1
+FROM node:20-bookworm
+
+RUN apt-get update && apt-get install -y python3-pip python3-venv 
+
+RUN python3 -m venv /venv
+
+RUN /venv/bin/pip install --upgrade pip
+
+RUN /venv/bin/pip install --no-cache-dir linkchecker==10.0.1
 
 RUN mkdir -p /usr/src/garie-plugin
 RUN mkdir -p /usr/src/garie-plugin/reports
@@ -13,6 +21,8 @@ RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.
     dpkg -i dumb-init_*.deb
 
 COPY . .
+
+ENV PATH="/venv/bin:$PATH"
 
 EXPOSE 3000
 

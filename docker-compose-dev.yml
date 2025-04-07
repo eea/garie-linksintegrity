@@ -1,7 +1,7 @@
 version: '3'
 services:
     influxdb:
-        image: 'influxdb:latest'
+        image: 'influxdb:1.8.10'
         ports:
             - 8086:8086
         environment:
@@ -10,6 +10,7 @@ services:
 
     garie-plugin:
         build: .
+        platform: linux/amd64
         privileged: true
         volumes:
             - ./src:/usr/src/garie-plugin/src:z
@@ -25,7 +26,7 @@ services:
         command: bash -c "tail -f /dev/null"
 
     chronograf:
-        image: 'chronograf:latest'
+        image: 'chronograf:1.8.10'
         ports:
             - 8888:8888
         depends_on:
